@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { ThemeToggle } from "@/components/shared/theme-toggle";
 
 export function Topbar({
   title,
@@ -34,6 +35,10 @@ export function Topbar({
       <div className="relative ml-auto hidden w-64 items-center sm:flex">
         <SearchIcon className="absolute left-3 size-4 text-muted-foreground" />
         <Input placeholder="Search…" className="pl-9" />
+      </div>
+
+      <div className="ml-auto sm:ml-0">
+        <ThemeToggle />
       </div>
 
       <Button variant="ghost" size="icon" className="relative">

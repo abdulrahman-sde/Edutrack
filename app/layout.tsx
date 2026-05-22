@@ -1,6 +1,8 @@
 import "./globals.css";
+import Script from "next/script";
 import { Instrument_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { themeInitScript } from "@/hooks/use-theme";
 
 const instrumentSans = Instrument_Sans({ subsets: ["latin"] });
 
@@ -22,6 +24,9 @@ export default function EfferdLayout({
           instrumentSans.className,
         )}
       >
+        <Script id="theme-init" strategy="beforeInteractive">
+          {themeInitScript}
+        </Script>
         {children}
       </body>
     </html>

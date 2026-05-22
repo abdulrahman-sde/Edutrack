@@ -2,7 +2,7 @@ import type { Teacher } from "@/types/user";
 import type { Student } from "@/types/student";
 import type { ClassSection } from "@/types/class";
 import type { AttendanceSession } from "@/types/attendance";
-import type { Assessment, Grade } from "@/types/marks";
+import type { Assessment, Exam, Grade } from "@/types/marks";
 import type { Resource } from "@/types/assignment";
 
 export const SUBJECTS = [
@@ -103,6 +103,25 @@ export const assessments: Assessment[] = classes.flatMap((c, ci) =>
     } satisfies Assessment;
   }),
 );
+
+export const exams: Exam[] = [
+  {
+    id: "ex1",
+    title: "Mid-Term Examination 2026",
+    term: "midterm",
+    classIds: ["c1", "c2", "c3", "c4"],
+    startDate: "2026-04-06",
+    endDate: "2026-04-17",
+  },
+  {
+    id: "ex2",
+    title: "Monthly Test — May",
+    term: "monthly",
+    classIds: ["c3", "c4"],
+    startDate: "2026-05-12",
+    endDate: "2026-05-14",
+  },
+];
 
 export const resources: Resource[] = [
   { id: "r1", kind: "assignment", title: "Algebra Problem Set 4", description: "Quadratic equations — solve all 20 problems.", classId: "c1", subject: "Mathematics", fileName: "algebra-set-4.pdf", fileUrl: "#", uploadedAt: "2026-05-20", dueDate: "2026-05-27" },

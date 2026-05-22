@@ -10,12 +10,10 @@ export default function AdminOverviewPage() {
         title="Institution overview"
         description="A snapshot of teachers, students, and classes across the school."
       />
-      <div className="space-y-6">
+      <div className="space-y-6 ">
         <OverviewStats />
-        <div className="grid gap-6 lg:grid-cols-2">
-          <ClassOverview />
-          <RecentTeachers />
-        </div>
+        <ClassOverview />
+        <RecentTeachers />
       </div>
     </>
   );

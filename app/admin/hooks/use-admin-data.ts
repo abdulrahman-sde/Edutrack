@@ -5,6 +5,7 @@ import { getTeachers } from "@/dal/teachers.dal";
 import { getStudents } from "@/dal/students.dal";
 import { getClasses } from "@/dal/classes.dal";
 import { getStudentReports, getInstitutionStats } from "@/dal/reports.dal";
+import { getExams, createExam, type CreateExamInput } from "@/dal/exams.dal";
 
 export function useTeachers() {
   return useAsync(() => getTeachers(), []);
@@ -24,4 +25,12 @@ export function useStudentReports(classId?: string) {
 
 export function useInstitutionStats() {
   return useAsync(() => getInstitutionStats(), []);
+}
+
+export function useExams(reloadKey = 0) {
+  return useAsync(() => getExams(), [reloadKey]);
+}
+
+export function useCreateExam() {
+  return (input: CreateExamInput) => createExam(input);
 }

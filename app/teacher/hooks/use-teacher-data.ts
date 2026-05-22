@@ -4,7 +4,7 @@ import { useAsync } from "@/hooks/use-async";
 import { getClassesForTeacher } from "@/dal/classes.dal";
 import { getStudentsByClass } from "@/dal/students.dal";
 import { getAttendanceSummary } from "@/dal/attendance.dal";
-import { getAssessmentsForClass } from "@/dal/marks.dal";
+import { getAssessmentsForClass, createAssessment, type CreateAssessmentInput } from "@/dal/marks.dal";
 import { getResources } from "@/dal/resources.dal";
 import { getStudentReports } from "@/dal/reports.dal";
 
@@ -26,11 +26,15 @@ export function useAttendanceSummary(classId: string | undefined) {
   );
 }
 
-export function useAssessments(classId: string | undefined) {
+export function useAssessments(classId: string | undefined, reloadKey = 0) {
   return useAsync(
     () => (classId ? getAssessmentsForClass(classId) : Promise.resolve([])),
-    [classId],
+    [classId, reloadKey],
   );
+}
+
+export function useCreateAssessment() {
+  return (input: CreateAssessmentInput) => createAssessment(input);
 }
 
 export function useMyResources() {

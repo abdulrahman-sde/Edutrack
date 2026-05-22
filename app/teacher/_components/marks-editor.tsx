@@ -23,9 +23,20 @@ import { GradeBadge } from "@/components/shared/grade-badge";
 import { LoadingRows } from "@/components/shared/loading-rows";
 import { gradeFor } from "@/lib/mock/data";
 import { useAssessments, useClassStudents } from "../hooks/use-teacher-data";
+import { NewAssessmentDialog } from "./new-assessment-dialog";
 
-export function MarksEditor({ classId }: { classId: string | undefined }) {
-  const { data: assessments, loading } = useAssessments(classId);
+export function MarksEditor({
+  classId,
+  subjects,
+  reloadKey,
+  onCreated,
+}: {
+  classId: string | undefined;
+  subjects: string[];
+  reloadKey: number;
+  onCreated: () => void;
+}) {
+  const { data: assessments, loading } = useAssessments(classId, reloadKey);
   const { data: students } = useClassStudents(classId);
   const [scores, setScores] = useState<Record<string, number>>({});
   const [saved, setSaved] = useState(false);
@@ -51,8 +62,11 @@ export function MarksEditor({ classId }: { classId: string | undefined }) {
 
   if (!assessments.length) {
     return (
-      <Card className="p-8 text-center text-sm text-muted-foreground">
-        No assessments for this class yet.
+      <Card className="flex flex-col items-center gap-4 p-8 text-center">
+        <p className="text-sm text-muted-foreground">No assessments for this class yet.</p>
+        {classId && (
+          <NewAssessmentDialog classId={classId} subjects={subjects} onCreated={onCreated} />
+        )}
       </Card>
     );
   }
@@ -67,10 +81,15 @@ export function MarksEditor({ classId }: { classId: string | undefined }) {
             </TabsTrigger>
           ))}
         </TabsList>
-        <Button onClick={() => setSaved(true)} variant={saved ? "secondary" : "default"}>
-          <SaveIcon data-icon="inline-start" />
-          {saved ? "Saved" : "Save marks"}
-        </Button>
+        <div className="flex items-center gap-2">
+          {classId && (
+            <NewAssessmentDialog classId={classId} subjects={subjects} onCreated={onCreated} />
+          )}
+          <Button onClick={() => setSaved(true)} variant={saved ? "secondary" : "default"}>
+            <SaveIcon data-icon="inline-start" />
+            {saved ? "Saved" : "Save marks"}
+          </Button>
+        </div>
       </div>
 
       {assessments.map((a) => (

@@ -19,3 +19,15 @@ export type Assessment = {
   totalMarks: number;
   entries: MarkEntry[];
 };
+
+export type ExamTerm = "midterm" | "final" | "monthly" | "pre-board";
+
+// Institution-wide exam created by an admin, spanning one or more classes.
+export type Exam = {
+  id: string;
+  title: string;
+  term: ExamTerm;
+  classIds: string[];
+  startDate: string;
+  endDate: string;
+};

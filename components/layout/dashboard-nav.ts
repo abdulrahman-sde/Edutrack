@@ -8,6 +8,7 @@ import {
   ClipboardListIcon,
   FolderUpIcon,
   TrendingUpIcon,
+  FileCheckIcon,
   type LucideIcon,
 } from "lucide-react";
 
@@ -21,6 +22,7 @@ export const NAV_ICONS = {
   reports: FileBarChartIcon,
   attendance: CalendarCheckIcon,
   marks: ClipboardListIcon,
+  exams: FileCheckIcon,
   assignments: FolderUpIcon,
   performance: TrendingUpIcon,
 } satisfies Record<string, LucideIcon>;
