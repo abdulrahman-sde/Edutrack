@@ -1,15 +1,24 @@
 "use client";
 
-import { UsersIcon } from "lucide-react";
+import Link from "next/link";
+import { UsersIcon, ArrowUpRightIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
 import { LoadingRows } from "@/components/shared/loading-rows";
-import { useClasses, useTeachers } from "../hooks/use-admin-data";
+import { useClasses } from "../hooks/use-admin-data";
+import type { SubjectTeacher } from "@/types/class";
 
-export function ClassesGrid() {
-  const { data: classes, loading } = useClasses();
-  const { data: teachers } = useTeachers();
+function subjectCount(c: {
+  subjectTeachers?: SubjectTeacher[];
+  subjects?: string[];
+}): number {
+  const st = c.subjectTeachers ?? (c.subjects ?? []);
+  return st.length;
+}
+
+export function ClassesGrid({ reloadKey = 0 }: { reloadKey?: number }) {
+  const { data: classes, loading } = useClasses(reloadKey);
 
   if (loading || !classes) {
     return (
@@ -19,38 +28,37 @@ export function ClassesGrid() {
     );
   }
 
+  if (classes.length === 0) {
+    return (
+      <Card className="p-8 text-center text-sm text-muted-foreground">
+        No classes added yet.
+      </Card>
+    );
+  }
+
   return (
-    <div className="grid gap-4 sm:grid-cols-2">
+    <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {classes.map((c) => {
-        const teacher = teachers?.find((t) => t.id === c.classTeacherId);
+        const count = subjectCount(c);
         return (
           <Card key={c.id}>
             <CardHeader>
               <CardTitle className="flex items-center justify-between">
-                {c.name} · {c.section}
-                <Badge variant="secondary" className="gap-1">
+                <span className="truncate">{c.name} · {c.section}</span>
+                <Badge variant="secondary" className="gap-1 shrink-0">
                   <UsersIcon /> {c.studentCount}
                 </Badge>
               </CardTitle>
-              <CardDescription>Class teacher: {teacher?.name ?? "—"}</CardDescription>
+              <CardDescription>
+                {count} subject{count !== 1 ? "s" : ""}
+              </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="flex flex-wrap gap-1">
-                {c.subjects.map((s) => (
-                  <Badge key={s} variant="muted">
-                    {s}
-                  </Badge>
-                ))}
-              </div>
-              {teacher && (
-                <div className="flex items-center gap-2 border-t border-border/60 pt-3">
-                  <Avatar className="size-7">
-                    <AvatarImage src={teacher.avatarUrl} alt={teacher.name} />
-                    <AvatarFallback>{teacher.name.slice(0, 2)}</AvatarFallback>
-                  </Avatar>
-                  <span className="text-xs text-muted-foreground">{teacher.email}</span>
-                </div>
-              )}
+            <CardContent>
+              <Button asChild variant="outline" size="sm" className="w-full cursor-pointer">
+                <Link href={`/admin/classes/${c.id}`}>
+                  View Details <ArrowUpRightIcon data-icon="inline-end" />
+                </Link>
+              </Button>
             </CardContent>
           </Card>
         );

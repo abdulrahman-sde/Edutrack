@@ -5,14 +5,6 @@ export type AttendanceRecord = {
   status: AttendanceStatus;
 };
 
-export type AttendanceSession = {
-  id: string;
-  classId: string;
-  subject: string;
-  date: string;
-  records: AttendanceRecord[];
-};
-
 export type AttendanceSummary = {
   studentId: string;
   present: number;

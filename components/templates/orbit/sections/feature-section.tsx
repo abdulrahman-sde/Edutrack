@@ -6,7 +6,6 @@ import {
   BarChart3Icon,
   BookOpenIcon,
   UploadCloudIcon,
-  GlobeIcon,
 } from "lucide-react";
 
 export function FeatureSection() {

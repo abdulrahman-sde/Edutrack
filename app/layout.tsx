@@ -1,21 +1,23 @@
+"use client";
+
 import "./globals.css";
-import Script from "next/script";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useState } from "react";
+import { AuthProvider } from "@/contexts/auth-context";
 import { Instrument_Sans } from "next/font/google";
 import { cn } from "@/lib/utils";
 import { themeInitScript } from "@/hooks/use-theme";
+import Script from "next/script";
 
 const instrumentSans = Instrument_Sans({ subsets: ["latin"] });
 
-export const metadata = {
-  title: "EduTrack — School Management System",
-  description: "A modern teacher and student management dashboard for Pakistani educational institutions.",
-};
-
-export default function EfferdLayout({
+export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const [queryClient] = useState(() => new QueryClient());
+
   return (
     <html lang="en" suppressHydrationWarning>
       <body
@@ -27,7 +29,9 @@ export default function EfferdLayout({
         <Script id="theme-init" strategy="beforeInteractive">
           {themeInitScript}
         </Script>
-        {children}
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>{children}</AuthProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );

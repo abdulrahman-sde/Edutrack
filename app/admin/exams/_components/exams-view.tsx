@@ -5,7 +5,7 @@ import { CalendarRangeIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { LoadingRows } from "@/components/shared/loading-rows";
-import { useClasses, useExams } from "../hooks/use-admin-data";
+import { useClasses, useExams } from "../../hooks/use-admin-data";
 import { NewExamDialog } from "./new-exam-dialog";
 
 const TERM_LABELS: Record<string, string> = {

@@ -1,15 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { UsersIcon, ArrowRightIcon } from "lucide-react";
+import { UsersIcon, ArrowRightIcon, GraduationCapIcon } from "lucide-react";
 import { Card, CardHeader, CardTitle, CardContent, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { LoadingRows } from "@/components/shared/loading-rows";
 import { useMyClasses } from "../hooks/use-teacher-data";
+import { useAuth } from "@/hooks/use-auth";
 
 export function MyClasses() {
   const { data: classes, loading } = useMyClasses();
+  const { user } = useAuth();
 
   if (loading || !classes) {
     return (
@@ -19,40 +21,52 @@ export function MyClasses() {
     );
   }
 
+  if (classes.length === 0) {
+    return (
+      <Card className="p-8 text-center text-sm text-muted-foreground">
+        No classes assigned yet. Contact the admin to get assigned to a class.
+      </Card>
+    );
+  }
+
   return (
     <div className="grid gap-4 sm:grid-cols-2">
-      {classes.map((c) => (
-        <Card key={c.id}>
-          <CardHeader>
-            <CardTitle className="flex items-center justify-between">
-              {c.name} · {c.section}
-              <Badge variant="secondary" className="gap-1">
-                <UsersIcon /> {c.studentCount}
-              </Badge>
-            </CardTitle>
-            <CardDescription>{c.subjects.length} subjects</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-wrap gap-1">
-              {c.subjects.map((s) => (
-                <Badge key={s} variant="muted">
-                  {s}
+      {classes.map((c) => {
+        const mySubjects = c.subjectTeachers.filter((st) => st.teacherId === user?.id);
+        return (
+          <Card key={c.id}>
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                {c.name} · {c.section}
+                <Badge variant="secondary" className="gap-1">
+                  <UsersIcon /> {c.studentCount}
                 </Badge>
-              ))}
-            </div>
-            <div className="flex gap-2">
-              <Button asChild size="sm" variant="outline">
-                <Link href="/teacher/attendance">
-                  Attendance <ArrowRightIcon data-icon="inline-end" />
-                </Link>
-              </Button>
-              <Button asChild size="sm" variant="outline">
-                <Link href="/teacher/marks">Marks</Link>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-      ))}
+              </CardTitle>
+              <CardDescription>{mySubjects.length} subject{mySubjects.length !== 1 ? "s" : ""}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-wrap gap-1">
+                {mySubjects.map((st, i) => (
+                  <Badge key={`${st.subject}-${i}`} variant="muted" className="gap-1">
+                    <GraduationCapIcon className="size-3" />
+                    {st.subject}
+                  </Badge>
+                ))}
+              </div>
+              <div className="flex gap-2">
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/teacher/attendance">
+                    Attendance <ArrowRightIcon data-icon="inline-end" />
+                  </Link>
+                </Button>
+                <Button asChild size="sm" variant="outline">
+                  <Link href="/teacher/marks">Marks</Link>
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        );
+      })}
     </div>
   );
 }

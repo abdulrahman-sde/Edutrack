@@ -1,5 +1,7 @@
 "use client";
 
+import Link from "next/link";
+import { ArrowUpRightIcon } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -11,22 +13,25 @@ import {
 } from "@/components/ui/table";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { LoadingRows } from "@/components/shared/loading-rows";
-import { useTeachers, useClasses } from "../hooks/use-admin-data";
+import { useTeachers } from "../hooks/use-admin-data";
 
-export function TeachersTable() {
-  const { data: teachers, loading } = useTeachers();
-  const { data: classes } = useClasses();
-
-  const classLabel = (id: string) => {
-    const c = classes?.find((x) => x.id === id);
-    return c ? `${c.name}·${c.section}` : id;
-  };
+export function TeachersTable({ reloadKey = 0 }: { reloadKey?: number }) {
+  const { data: teachers, loading } = useTeachers(reloadKey);
 
   if (loading || !teachers) {
     return (
       <Card className="p-4">
         <LoadingRows rows={4} />
+      </Card>
+    );
+  }
+
+  if (teachers.length === 0) {
+    return (
+      <Card className="p-8 text-center text-sm text-muted-foreground">
+        No teachers added yet.
       </Card>
     );
   }
@@ -37,10 +42,9 @@ export function TeachersTable() {
         <TableHeader>
           <TableRow>
             <TableHead>Teacher</TableHead>
-            <TableHead>Subjects</TableHead>
-            <TableHead>Classes</TableHead>
             <TableHead>Phone</TableHead>
             <TableHead>Joined</TableHead>
+            <TableHead className="w-20" />
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -58,30 +62,15 @@ export function TeachersTable() {
                   </div>
                 </div>
               </TableCell>
-              <TableCell>
-                <div className="flex flex-wrap gap-1">
-                  {t.subjects.map((s) => (
-                    <Badge key={s} variant="muted">
-                      {s}
-                    </Badge>
-                  ))}
-                </div>
-              </TableCell>
-              <TableCell>
-                {t.classIds.length ? (
-                  <div className="flex flex-wrap gap-1">
-                    {t.classIds.map((id) => (
-                      <Badge key={id} variant="outline">
-                        {classLabel(id)}
-                      </Badge>
-                    ))}
-                  </div>
-                ) : (
-                  <span className="text-xs text-muted-foreground">Unassigned</span>
-                )}
-              </TableCell>
               <TableCell className="text-muted-foreground">{t.phone}</TableCell>
               <TableCell className="text-muted-foreground">{t.joinedAt}</TableCell>
+              <TableCell>
+                <Button asChild variant="ghost" size="sm" className="cursor-pointer">
+                  <Link href={`/admin/teachers/${t.id}`}>
+                    View <ArrowUpRightIcon className="size-3.5" />
+                  </Link>
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>

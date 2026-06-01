@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# EduTrack — Next.js Frontend Dashboard
 
-## Getting Started
+This directory houses the Next.js 16 frontend for **EduTrack**, a comprehensive, role-based dashboard for teachers and school administrators. It is built using the App Router, Tailwind CSS, TypeScript, and Shadcn UI.
 
-First, run the development server:
+For a detailed overview of the entire project modules, technical specifications, and UX design, see the root [PROJECT_DESCRIPTION.md](../PROJECT_DESCRIPTION.md).
+
+---
+
+## 🚀 Getting Started
+
+### 📦 Installation
+
+Ensure you have [Node.js](https://nodejs.org) (v18+ recommended) installed, then run:
+
+```bash
+npm install
+```
+
+### 💻 Development Server
+
+Start the local development server on port `3000`:
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) in your browser to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 🏗️ Production Build
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Generate an optimized production build of the Next.js application:
 
-## Learn More
+```bash
+npm run build
+```
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## 🛠️ Design System & Customization
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project styling is centralized in `app/globals.css` with a customized color palette and dark mode tokens.
 
-## Deploy on Vercel
+- **Theme Switching**: Handled client-side via custom CSS variables synced to system preferences or manual selections using the `ThemeToggle` component.
+- **Component Primitives**: Integrated with Shadcn UI and Radix UI in the `components/ui/` directory.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📂 Code Organization & Architecture
+
+EduTrack follows a strict layer structure to ensure scalability and maintainability:
+
+1. **Routing & Pages (`app/`)**: Folders dictate routes. Page components focus solely on layout composition.
+2. **Feature Components (`app/[feature]/_components/`)**: Visual modules isolated to the features they serve (e.g., `MarksEditor` inside `/teacher`).
+3. **Custom Hooks (`app/[feature]/hooks/`)**: Holds all state machine, validation, and side-effect logic.
+4. **Data Access Layer (`dal/`)**: Pure network client routines (e.g., `exams.dal.ts`) that isolate UI files from raw endpoints.
+5. **Shared UI (`components/shared/`)**: Generic reusables like loaders, badges, and the theme engine.

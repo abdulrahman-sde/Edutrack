@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-import { BellIcon, SearchIcon } from "lucide-react";
+import { MenuIcon } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
@@ -11,40 +10,44 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "@/components/shared/theme-toggle";
+import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 
 export function Topbar({
   title,
   user,
+  onMenuToggle,
 }: {
   title: string;
   user: { name: string; email: string; avatarUrl?: string };
+  onMenuToggle?: () => void;
 }) {
+  const router = useRouter();
+  const { logout } = useAuth();
   const initials = user.name
     .split(" ")
     .map((w) => w[0])
     .slice(0, 2)
     .join("");
 
+  const handleSignOut = async () => {
+    await logout();
+    router.push("/login");
+  };
+
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-4 border-b border-border bg-background/80 px-4 backdrop-blur-md md:px-6">
+      <Button variant="ghost" size="icon" className="shrink-0 md:hidden" onClick={onMenuToggle} aria-label="Toggle navigation menu">
+        <MenuIcon className="size-5" />
+      </Button>
+
       <h1 className="text-lg font-medium tracking-tight">{title}</h1>
 
-      <div className="relative ml-auto hidden w-64 items-center sm:flex">
-        <SearchIcon className="absolute left-3 size-4 text-muted-foreground" />
-        <Input placeholder="Search…" className="pl-9" />
-      </div>
-
-      <div className="ml-auto sm:ml-0">
+      <div className="ml-auto">
         <ThemeToggle />
       </div>
-
-      <Button variant="ghost" size="icon" className="relative">
-        <BellIcon className="size-4" />
-        <span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-emerald-400" />
-      </Button>
 
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -66,8 +69,8 @@ export function Topbar({
           <DropdownMenuItem>Profile</DropdownMenuItem>
           <DropdownMenuItem>Settings</DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/">Sign out</Link>
+          <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-destructive focus:text-destructive">
+            Sign out
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

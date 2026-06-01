@@ -3,11 +3,7 @@ import React from "react";
 import { createPortal } from "react-dom";
 
 function Portal({ className, ...props }: React.ComponentProps<"div">) {
-	const [mounted, setMounted] = React.useState(false);
-
 	React.useEffect(() => {
-		setMounted(true);
-
 		const originalStyle = window.getComputedStyle(document.body).overflow;
 		const scrollbarWidth =
 			window.innerWidth - document.documentElement.clientWidth;
@@ -24,9 +20,7 @@ function Portal({ className, ...props }: React.ComponentProps<"div">) {
 		};
 	}, []);
 
-	if (!mounted) {
-		return null;
-	}
+	if (typeof window === "undefined") return null;
 
 	return createPortal(
 		<div

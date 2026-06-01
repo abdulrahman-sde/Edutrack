@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import {
   Table,
@@ -19,11 +19,8 @@ import { useMyClasses, useClassReports } from "../hooks/use-teacher-data";
 export function ClassReport() {
   const { data: classes } = useMyClasses();
   const [classId, setClassId] = useState<string>();
-  const { data: reports, loading } = useClassReports(classId);
-
-  useEffect(() => {
-    if (classes?.length && !classId) setClassId(classes[0].id);
-  }, [classes, classId]);
+  const resolvedClassId = classId ?? classes?.[0]?.id;
+  const { data: reports, loading } = useClassReports(resolvedClassId);
 
   const subjects = reports?.[0]?.subjects.map((s) => s.subject) ?? [];
 
@@ -37,6 +34,10 @@ export function ClassReport() {
       {loading || !reports ? (
         <Card className="p-4">
           <LoadingRows rows={6} />
+        </Card>
+      ) : reports.length === 0 ? (
+        <Card className="p-8 text-center text-sm text-muted-foreground">
+          No reports available for this class.
         </Card>
       ) : (
         <Card className="py-0">

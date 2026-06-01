@@ -25,7 +25,7 @@ import {
 } from "@/components/ui/select";
 import type { ExamTerm } from "@/types/marks";
 import type { ClassSection } from "@/types/class";
-import { useCreateExam } from "../hooks/use-admin-data";
+import { useCreateExam } from "../../hooks/use-admin-data";
 
 const TERMS: { value: ExamTerm; label: string }[] = [
   { value: "monthly", label: "Monthly Test" },
@@ -44,6 +44,7 @@ export function NewExamDialog({
   const createExam = useCreateExam();
   const [open, setOpen] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [title, setTitle] = useState("");
   const [term, setTerm] = useState<ExamTerm>("midterm");
   const [classIds, setClassIds] = useState<string[]>([]);
@@ -64,15 +65,21 @@ export function NewExamDialog({
   async function handleCreate() {
     if (!valid) return;
     setSaving(true);
-    await createExam({ title: title.trim(), term, classIds, startDate, endDate });
-    setSaving(false);
-    setOpen(false);
-    setTitle("");
-    setTerm("midterm");
-    setClassIds([]);
-    setStartDate("");
-    setEndDate("");
-    onCreated();
+    setError(null);
+    try {
+      await createExam({ title: title.trim(), term, classIds, startDate, endDate });
+      setSaving(false);
+      setOpen(false);
+      setTitle("");
+      setTerm("midterm");
+      setClassIds([]);
+      setStartDate("");
+      setEndDate("");
+      onCreated();
+    } catch (err: unknown) {
+      setSaving(false);
+      setError(err instanceof Error ? err.message : "Failed to create exam");
+    }
   }
 
   return (
@@ -90,6 +97,12 @@ export function NewExamDialog({
           </DialogDescription>
         </DialogHeader>
 
+        {error && (
+          <div className="rounded-xl border border-destructive/20 bg-destructive/10 p-3 text-sm text-destructive">
+            {error}
+          </div>
+        )}
+
         <div className="space-y-4 py-2">
           <div className="space-y-2">
             <Label htmlFor="exam-title">Title</Label>
@@ -98,12 +111,13 @@ export function NewExamDialog({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Final Examination 2026"
+              disabled={saving}
             />
           </div>
 
           <div className="space-y-2">
             <Label>Term</Label>
-            <Select value={term} onValueChange={(v) => setTerm(v as ExamTerm)}>
+            <Select value={term} onValueChange={(v) => setTerm(v as ExamTerm)} disabled={saving}>
               <SelectTrigger className="w-full">
                 <SelectValue />
               </SelectTrigger>
@@ -120,22 +134,24 @@ export function NewExamDialog({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="exam-start">Start date</Label>
-              <Input
-                id="exam-start"
-                type="date"
-                value={startDate}
-                onChange={(e) => setStartDate(e.target.value)}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="exam-end">End date</Label>
-              <Input
-                id="exam-end"
-                type="date"
-                value={endDate}
-                min={startDate || undefined}
-                onChange={(e) => setEndDate(e.target.value)}
-              />
+                <Input
+                  id="exam-start"
+                  type="date"
+                  value={startDate}
+                  onChange={(e) => setStartDate(e.target.value)}
+                  disabled={saving}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="exam-end">End date</Label>
+                <Input
+                  id="exam-end"
+                  type="date"
+                  value={endDate}
+                  min={startDate || undefined}
+                  onChange={(e) => setEndDate(e.target.value)}
+                  disabled={saving}
+                />
             </div>
           </div>
 
@@ -150,6 +166,7 @@ export function NewExamDialog({
                   <Checkbox
                     checked={classIds.includes(c.id)}
                     onCheckedChange={() => toggleClass(c.id)}
+                    disabled={saving}
                   />
                   {c.name} · {c.section}
                 </label>
@@ -160,7 +177,7 @@ export function NewExamDialog({
 
         <DialogFooter>
           <DialogClose asChild>
-            <Button variant="ghost">Cancel</Button>
+            <Button variant="ghost" disabled={saving}>Cancel</Button>
           </DialogClose>
           <Button onClick={handleCreate} disabled={!valid || saving}>
             {saving ? "Creating…" : "Create exam"}

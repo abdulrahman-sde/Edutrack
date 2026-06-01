@@ -17,7 +17,6 @@ export function useAsync<T>(fn: () => Promise<T>, deps: unknown[] = []): AsyncSt
 
   useEffect(() => {
     let active = true;
-    setState({ data: undefined, loading: true, error: undefined });
     fn()
       .then((data) => {
         if (active) setState({ data, loading: false, error: undefined });

@@ -1,3 +1,4 @@
+import { GuestGuard } from "@/components/shared/guest-guard";
 import { Header } from "@/components/templates/orbit/sections/header";
 import { HeroSection } from "@/components/templates/orbit/sections/hero";
 import { LogosSection } from "@/components/templates/orbit/sections/logos-section";
@@ -8,16 +9,18 @@ import { Footer } from "@/components/templates/orbit/sections/footer";
 
 export default function OrbitDemoPage() {
   return (
-    <div className="flex min-h-screen flex-col items-center">
-      <Header />
-      <main className="flex w-full flex-col gap-20">
-        <HeroSection />
-        <LogosSection />
-        <FeatureSection />
-        <Integrations />
-        <CallToAction />
-      </main>
-      <Footer />
-    </div>
+    <GuestGuard>
+      <div className="flex min-h-screen flex-col items-center">
+        <Header />
+        <main className="flex w-full flex-col gap-20">
+          <HeroSection />
+          <LogosSection />
+          <FeatureSection />
+          <Integrations />
+          <CallToAction />
+        </main>
+        <Footer />
+      </div>
+    </GuestGuard>
   );
 }

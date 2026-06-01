@@ -65,6 +65,10 @@ export function ReportsView() {
         <Card className="p-4">
           <LoadingRows rows={6} />
         </Card>
+      ) : reports.length === 0 ? (
+        <Card className="p-8 text-center text-sm text-muted-foreground">
+          No reports available yet.
+        </Card>
       ) : (
         <Card className="py-0">
           <Table>

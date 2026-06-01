@@ -40,19 +40,4 @@ export const Logo = ({ className }: { className?: string }) => {
   );
 };
 
-export const LogoIcon = ({ className }: { className?: string }) => {
-  return (
-    <svg
-      className={cn("size-6", className)}
-      viewBox="0 0 28 28"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      aria-label="EduTrack icon"
-    >
-      <rect x="0.75" y="0.75" width="26.5" height="26.5" rx="5.25" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M5 14l9-5 9 5-9 5-9-5z" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" />
-      <path d="M23 14v5" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-      <path d="M10 16.5v3c0 1.1 1.8 2 4 2s4-.9 4-2v-3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-    </svg>
-  );
-};
+

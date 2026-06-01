@@ -16,6 +16,8 @@ export function ClassOverview() {
       <CardContent>
         {loading || !classes ? (
           <LoadingRows rows={4} />
+        ) : classes.length === 0 ? (
+          <p className="text-center text-sm text-muted-foreground">No classes yet.</p>
         ) : (
           <div className="flex h-72 w-full items-end justify-start gap-6">
             {classes.map((c) => (

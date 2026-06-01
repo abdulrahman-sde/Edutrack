@@ -6,6 +6,7 @@ export type User = {
   email: string;
   role: UserRole;
   avatarUrl?: string;
+  institutionName?: string;
 };
 
 export type Teacher = User & {

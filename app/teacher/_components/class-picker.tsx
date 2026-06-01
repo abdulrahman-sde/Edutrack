@@ -20,13 +20,18 @@ export function ClassPicker({
 }) {
   return (
     <Select value={value} onValueChange={onChange}>
-      <SelectTrigger className="w-52">
+      <SelectTrigger className="w-56">
         <SelectValue placeholder="Select a class" />
       </SelectTrigger>
       <SelectContent>
         {classes?.map((c) => (
           <SelectItem key={c.id} value={c.id}>
-            {c.name} · {c.section}
+            <span>
+              {c.name} · {c.section}
+            </span>
+            <span className="ml-2 text-muted-foreground">
+              {c.studentCount} students
+            </span>
           </SelectItem>
         ))}
       </SelectContent>

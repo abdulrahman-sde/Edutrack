@@ -1,5 +1,5 @@
 import { PageIntro } from "@/components/shared/page-intro";
-import { ExamsView } from "../_components/exams-view";
+import { ExamsView } from "./_components/exams-view";
 
 export default function AdminExamsPage() {
   return (

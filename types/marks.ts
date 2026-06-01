@@ -18,6 +18,8 @@ export type Assessment = {
   date: string;
   totalMarks: number;
   entries: MarkEntry[];
+  examId?: string;
+  examTitle?: string;
 };
 
 export type ExamTerm = "midterm" | "final" | "monthly" | "pre-board";
